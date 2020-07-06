@@ -1,0 +1,70 @@
+
+/*!
+
+=========================================================
+* Argon Dashboard - v1.2.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md)
+
+* Coded by www.creative-tim.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+
+
+
+// Bootstrap functions
+//@import 'bootstrap/functions';
+@import '~bootstrap/scss/functions';
+@import "~bootstrap/scss/mixins";
+
+// Argon functions
+@import "custom/functions";
+@import "custom/variables";
+@import "~bootstrap/scss/variables";
+
+// Argon mixins
+@import "custom/mixins";
+
+// Bootstrap components
+@import '~bootstrap/scss/bootstrap';
+// Argon components
+@import 'custom/components';
+@import 'custom/utilities';
+@import '~bootstrap-vue/src/index.scss';
+
+$vs-border-color: $gray-300;
+$vs-component-line-height: calc(1rem + 0.9rem + 5px);
+$vs-dropdown-bg: $input-focus-color;
+
+@import "~vue-select/src/scss/vue-select.scss";
+
+.vs__search::placeholder,
+.vs__dropdown-toggle,
+.vs__dropdown-option,
+.vs__dropdown-menu {
+ color: $input-focus-color;
+ background-color: $input-focus-bg;
+}
+
+.vs__selected {
+  color: $input-focus-color;
+  background-color: $input-focus-bg;
+}
+.vs__dropdown-option--highlight {
+  color: $dropdown-link-hover-color;
+  text-decoration: none;
+  @include gradient-bg($dropdown-link-hover-bg);
+}
+
+.card-img {
+  width: 100%;
+  height: 15vw;
+  object-fit: cover;
+}

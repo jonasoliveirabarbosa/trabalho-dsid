@@ -11,7 +11,27 @@ module.exports = {
     parser: 'babel-eslint',
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'vue/require-prop-types': 0,
+    'import/extensions': ['error', 'never', {
+      js: 'never',
+      vue: 'never',
+    }],
+    'no-param-reassign': ['error', {
+      props: true,
+      ignorePropertyModificationsFor: [
+        'state', // for vuex state
+        'acc', // for reduce accumulators
+        'e', // for e.returnvalue
+      ],
+    }],
+    'no-restricted-syntax': [0, 'ForInStatement', 'ForOfStatement'],
+    'import/no-extraneous-dependencies': ['error', {
+      optionalDependencies: ['test/unit/index.js'],
+    }],
+    semi: [
+      'error',
+      'never',
+    ],
+    'no-return-assign': ['error', 'except-parens'],
   },
-};
+}
