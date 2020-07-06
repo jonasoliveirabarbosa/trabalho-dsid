@@ -77,7 +77,7 @@ export default {
     },
     handleSelect(quote) {
       const formattedVoo = {
-        id_voo: quote.id,
+        id_voo: moment().format('x'),
         nome_companhia: this.findCarrierNameById(quote.OutboundLeg.CarrierIds[0]),
         classe: 'Regular',
         data_voo: this.formatDateISO(quote.OutboundLeg.DepartureDate),

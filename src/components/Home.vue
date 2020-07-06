@@ -21,14 +21,14 @@
                   v-slot="validationContext"
                 >
                   <b-form-group
-                    id="origen-input"
+                    id="origem-input"
                     label="Origem:"
                     label-for="input-2"
                   >
                     <v-select
                       class="style-chooser"
                       :searchable="true"
-                      placeholder="Insira seu local de origen"
+                      placeholder="Insira seu local de origem"
                       v-model="form.origem"
                       label="PlaceName"
                       @search="getLocalesOrigem"
@@ -65,7 +65,7 @@
                     <v-select
                       class="style-chooser"
                       @search="getLocalesDestino"
-                      placeholder="Insira seu local de origen"
+                      placeholder="Insira seu local de origem"
                       v-model="form.destino"
                       label="PlaceName"
                       :searchable="true"
@@ -94,7 +94,7 @@
                   v-slot="validationContext"
                 >
                   <b-form-group
-                    id="origen-input"
+                    id="origem-input"
                     label="Hotel:"
                   >
                     <v-select
@@ -292,7 +292,7 @@
               variant="primary"
               type="submit"
             >
-              Buscar Passagems
+              Buscar Passagens
             </b-button>
           </b-form>
         </validation-observer>
@@ -360,7 +360,7 @@
         </b-card>
       </b-col>
       <b-col
-        v-if="storeHotel.nome_hotel"
+        v-if="storeHotel.quarto_hotel"
       >
         <b-card
           title="Hotel"
@@ -373,14 +373,14 @@
           <b-row>
             <b-col>
               <b-card-text>
-                <b>Nome:</b> {{ storeHotel.nome_hotel }}
+                <b>Nome:</b> {{ storeHotel.quarto_hotel.nome_hotel }}
               </b-card-text>
               <b-card-text>
                 <b>Diária:</b>
-                  R$ {{ formatPrice(storeHotel.valor_diaria) }}
+                  R$ {{ formatPrice(storeHotel.quarto_hotel.valor_diaria) }}
               </b-card-text>
               <b-card-text>
-                <b>Endereco:</b> {{ storeHotel.endereco }}
+                <b>Endereco:</b> {{ storeHotel.quarto_hotel.endereco }}
               </b-card-text>
             </b-col>
           </b-row>
@@ -388,7 +388,7 @@
       </b-col>
     </b-row>
     <b-row
-      v-if="storeHotel.nome_hotel || storeVolta.valor_total || storeIda.valor_total"
+      v-if="storeHotel.quarto_hotel || storeVolta.valor_total || storeIda.valor_total"
       class="mb-3"
     >
       <b-col
@@ -417,10 +417,21 @@
           />
         </b-tab>
         <b-tab title="Hoteis">
-          <hotel-cards :hotel-data="hotelData" />
+          <hotel-cards
+            :hotel-data="hotelData"
+            :data-ida="form.dataIda"
+            :data-volta="form.dataVolta"
+            :qtd-hospedes="Number(form.adultos) + Number(form.menores)"
+          />
         </b-tab>
       </b-tabs>
     </b-col>
+    <b-modal id="bv-modal-success" hide-footer>
+      <template v-slot:modal-title>
+        <h3>Compra efetuada com sucesso !</h3>
+      </template>
+      <b-button class="mt-3" block @click="$router.push({ path: '/dash' })">Continuar</b-button>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -430,7 +441,7 @@ import viagemCards from '@/components/viagemCards'
 import hotelCards from '@/components/hotelCards'
 
 export default {
-  name: 'HelloWorld',
+  name: 'Home',
   data() {
     return {
       form: {
@@ -603,7 +614,7 @@ export default {
     },
     formatMenoresField(menoresNumber) {
       let searchString = ''
-      for (let i = 0; i < menoresNumber; i++) {
+      for (let i = 0; i < menoresNumber; i += 1) {
         searchString += '10,'
       }
       return searchString
@@ -697,10 +708,32 @@ export default {
       return momentDate.format('DD/MM/yyyy')
     },
     handleComprar() {
-      if (!this.isLogOn) {
+      if (!this.storeIsLogOn) {
         this.$router.push({ path: '/sing_up' })
+      } else {
+        this.$http.post(
+          'https://ep-dsid.herokuapp.com/reservas/', {
+            usuario: this.$store.state.usuario.id,
+            reserva_voo: {
+              voos: [
+                this.storeIda,
+                this.storeVolta,
+              ],
+              num_passageiros: Number(this.form.adultos) + Number(this.form.menores),
+            },
+            reserva_hotel: this.storeHotel,
+          },
+        )
+          .then(() => {
+            this.$store.commit('selectedIda', {})
+            this.$store.commit('selectedVolta', {})
+            this.$store.commit('selectedHotel', {})
+            this.$bvModal.show('bv-modal-success')
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
-      // return momentDate.format('DD/MM/yyyy')
     },
   },
   mounted() {

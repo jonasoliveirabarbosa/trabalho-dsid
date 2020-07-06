@@ -94,7 +94,9 @@
 
             &:nth-child(10) {
                 left: calc(50% - var(--gutter));
-                top: calc(50% - var(--gutter));
+                top: {
+                  calc
+                }(50% - var(--gutter));
             }
 
             &:nth-child(11) {

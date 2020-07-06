@@ -1,12 +1,21 @@
 <template>
   <div id="app">
-    <div>
       <b-navbar toggleable="lg" type="dark" variant="primary">
-        <b-navbar-brand href="#">Smart Traveler</b-navbar-brand>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
+        <b-navbar-brand to="/">Smart Traveler</b-navbar-brand>
+        <b-navbar-nav class="ml-auto" v-if="this.$store.state.isLogOn">
+            <b-navbar-nav>
+              <b-nav-text> <router-link :to="{ path: '/dash' }">Olá {{ this.$store.state.usuario.nome }}</router-link></b-nav-text>
+            </b-navbar-nav>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto" v-else>
+            <b-navbar-nav>
+              <b-nav-text>
+                <router-link :to="{ path: '/sing_up' }">Cadastrar</router-link>
+                / <router-link :to="{ path: '/log_in' }">Login</router-link>
+              </b-nav-text>
+            </b-navbar-nav>
+        </b-navbar-nav>
       </b-navbar>
-    </div>
     <router-view/>
   </div>
 </template>

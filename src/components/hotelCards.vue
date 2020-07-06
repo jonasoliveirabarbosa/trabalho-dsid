@@ -47,10 +47,15 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'hotelCards',
   props: {
     hotelData: Array,
+    dataIda: String,
+    dataVolta: String,
+    qtdHospedes: Number,
   },
   data() {
     return {
@@ -63,18 +68,27 @@ export default {
     },
     handleSelect(hotel) {
       const formattedPrices = hotel.price.split(('-'))
+      const idaMomentDate = moment(this.dataIda, 'YYYY-MM-DD')
+      const voltaMomentDate = moment(this.dataVolta, 'YYYY-MM-DD')
+      console.log(formattedPrices[0].replace(/[^\d.-]/g, ''))
 
       const formattedHotel = {
-        id_quarto_hotel: hotel.listing_key,
-        nome_hotel: hotel.name,
-        nome_quarto: '1',
-        descricao_quarto: 'desc quarto',
-        endereco: hotel.location_string,
-        cidade: hotel.location_string,
-        estado: hotel.location_string,
-        pais: hotel.location_strin,
-        valor_diaria: formattedPrices[0].replace(/[^\d.-]/g, ''),
-        disponivel: true,
+        quarto_hotel: {
+          id_quarto_hotel: moment().format('x'),
+          nome_hotel: hotel.name,
+          nome_quarto: '1',
+          descricao_quarto: 'desc quarto',
+          endereco: hotel.location_string,
+          cidade: hotel.location_string,
+          estado: hotel.location_string,
+          pais: hotel.location_strin,
+          valor_diaria: formattedPrices[0].replace(/[^\d.-]/g, ''),
+          disponivel: true,
+          max_hospedes: this.qtdHospedes,
+        },
+        data_entrada: idaMomentDate.toISOString(),
+        data_saida: voltaMomentDate.toISOString(),
+        qtd_hospedes: this.qtdHospedes,
       }
       this.$store.commit('setHotel', formattedHotel)
     },

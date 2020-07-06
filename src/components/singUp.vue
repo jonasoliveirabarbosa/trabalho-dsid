@@ -29,7 +29,7 @@
             <b-form-input
               id="example-input-1"
               name="example-input-1"
-              v-model="form.name"
+              v-model="form.nome"
               :state="getValidationState(validationContext)"
               aria-describedby="input-1-live-feedback"
             ></b-form-input>
@@ -102,7 +102,7 @@ export default {
     },
     resetForm() {
       this.form = {
-        name: null,
+        nome: null,
         cpf: null,
         email: null,
         senha: null,
@@ -113,24 +113,14 @@ export default {
       })
     },
     onSubmit() {
+      this.form.cpf = this.form.cpf.replace(/[^\d]+/g, '')
       this.$http.post(
-        'https://ep-dsid.herokuapp.com/usuarios/',
-        {
-          crossDomain: true,
-          data: this.form,
-          headers: {
-            Connection: 'keep-alive',
-            Server: 'gunicorn/20.0.4',
-            Vary: 'Accept, Origin, Cookie',
-            Allow: 'GET, POST, HEAD, OPTIONS',
-            'X-Frame-Options': 'DENY',
-            'X-Content-Type-Options': 'nosniff',
-            'Content-Type': 'application/json',
-          },
-        },
+        'https://ep-dsid.herokuapp.com/usuarios/', this.form,
       )
         .then((response) => {
-          console.log(response)
+          this.$store.commit('setUsuario', response.data)
+          this.$store.commit('setIsLogOn', true)
+          this.$router.push({ path: '/dash' })
         })
         .catch((error) => {
           console.log(error)
